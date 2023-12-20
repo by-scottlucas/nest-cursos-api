@@ -1,0 +1,11 @@
+Comandos NPM NestJS
+
+
+Criar Module/ Controller/ Service:
+
+npx @nestjs/cli generate module
+
+
+Instalar Swagger:
+
+npm install @nestjs/swagger swagger-ui-express
