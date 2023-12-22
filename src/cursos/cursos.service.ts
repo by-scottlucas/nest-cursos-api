@@ -1,49 +1,54 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { CURSOS } from './cursos.mock';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateCursoDto } from './dto/create-curso-dto';
 
 @Injectable()
 export class CursosService {
 
-    cursos = CURSOS;
+    constructor(private readonly prisma: PrismaService) { }
 
-    getCursos(): Promise<any> {
-        return new Promise(resolve => {
-            resolve(this.cursos);
-        })
+    async addCurso({ title, description }: CreateCursoDto) {
+        return this.prisma.cursos.create(
+            { data: { title, description } }
+        )
     }
 
-    getCurso(cursoId): Promise<any> {
-        let id = Number(cursoId);
-        return new Promise(resolve => {
-            const curso = this.cursos.find(curso => curso.id === id)
+    async listarCursos() {
+        return this.prisma.cursos.findMany();
+    }
 
-            if (!curso) {
-                throw new HttpException('O curso com esse ID não existe!', 404);
+    async listarCurso(id: number) {
+
+        await this.exists(id);
+
+        return this.prisma.cursos.findUnique({
+            where: {
+                id
             }
+        });
 
-            resolve(curso);
-        })
     }
 
-    addCurso(curso): Promise<any> {
-        return new Promise(resolve => {
-            this.cursos.push(curso);
-            resolve(this.cursos);
-        })
-    }
+    async deletarCurso(id: number) {
 
-    deleteCurso(cursoId): Promise<any> {
+        await this.exists(id);
 
-        let id = Number(cursoId);
-
-        return new Promise(resolve => {
-            let index = this.cursos.findIndex(curso => curso.id === id);
-
-            if (index === -1) {
-                throw new HttpException('O curso com este ID não existe', 404);
+        return this.prisma.cursos.delete({
+            where: {
+                id
             }
-            this.cursos.splice(index, 1);
-            resolve(this.cursos);
-        })
+        });
+
+    }
+
+    async exists(id: number) {
+
+        if (!(await this.prisma.cursos.count({
+            where: {
+                id
+            }
+        }))) {
+            throw new NotFoundException(`O usuário com o ${id} não existe.`);
+        }
     }
 }

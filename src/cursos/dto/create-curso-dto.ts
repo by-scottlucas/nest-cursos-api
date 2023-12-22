@@ -5,7 +5,7 @@ export class CreateCursoDto {
     readonly id: number;
 
     @ApiProperty({type: String, description: 'Título do Curso'})
-    readonly tittle: string;
+    readonly title: string;
 
     @ApiProperty({type: String, description: 'Descrição do Curso'})
     readonly description: string;

@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
-import { CursosModule } from './cursos/cursos.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CursoModule } from './curso/curso.module';
+import { CursosModule } from './cursos/cursos.module';
 
 
 @Module({
-  imports: [CursosModule , CursoModule],
+  imports: [CursosModule],
   controllers: [AppController],
   providers: [AppService],
 
