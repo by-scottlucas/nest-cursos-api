@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCursoDto } from './dto/create-curso-dto';
+import { UpdatePatchCursoDTO } from './dto/update-patch-curso-dto';
+import { UpdatePutCursoDTO } from './dto/update-put-curso-dto';
 
 @Injectable()
 export class CursosService {
@@ -23,9 +25,42 @@ export class CursosService {
 
         return this.prisma.cursos.findUnique({
             where: {
-                id
+                id,
             }
         });
+
+    }
+
+    async atualizarCurso(id: number, { title, description }: UpdatePutCursoDTO) {
+
+        await this.exists(id);
+
+        return this.prisma.cursos.update({
+            data: { title, description },
+            where: { id },
+        });
+
+    }
+
+    async atualizarParcial(id: number, { title, description }: UpdatePatchCursoDTO) {
+
+        await this.exists(id);
+        const data: any = {};
+
+        if (title) {
+            data.title = title;
+        }
+
+        if (description) {
+            data.description = description;
+        }
+
+        return this.prisma.cursos.update({
+            data,
+            where: {
+                id
+            },
+        })
 
     }
 
@@ -48,7 +83,7 @@ export class CursosService {
                 id
             }
         }))) {
-            throw new NotFoundException(`O usuário com o ${id} não existe.`);
+            throw new NotFoundException(`O usuário com o ID ${id} não existe.`);
         }
     }
 }

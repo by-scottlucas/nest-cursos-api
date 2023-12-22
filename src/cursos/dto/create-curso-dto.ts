@@ -1,12 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class CreateCursoDto {
+
     @ApiProperty({type: Number, description: 'ID'})
-    readonly id: number;
+    id: number;
 
     @ApiProperty({type: String, description: 'Título do Curso'})
-    readonly title: string;
+    @IsString()
+    @IsNotEmpty()
+    title: string;
 
     @ApiProperty({type: String, description: 'Descrição do Curso'})
-    readonly description: string;
+    @IsString()
+    @IsNotEmpty()
+    description: string;
 }
