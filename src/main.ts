@@ -11,7 +11,7 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle('Nest API Cursos')
     .setVersion('1.0.0')
-    .setDescription('API relacionada a cursos')
+    .setDescription('O projeto se trata de uma API desenvolvida em NestJS para lidar com cursos.')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
