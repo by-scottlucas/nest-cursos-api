@@ -1,50 +1,48 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCursoDto } from './dto/create-curso-dto';
-import { UpdatePatchCursoDTO } from './dto/update-patch-curso-dto';
-import { UpdatePutCursoDTO } from './dto/update-put-curso-dto';
+import { CreateCursoDto } from './dto/create.curso.dto';
+import { UpdatePatchCursoDTO } from './dto/update.patch.curso.dto';
 
 @Injectable()
 export class CursosService {
 
     constructor(private readonly prisma: PrismaService) { }
 
-    async addCurso({ title, description }: CreateCursoDto) {
-        return this.prisma.cursos.create(
-            { data: { title, description } }
-        )
+    async create(data: CreateCursoDto) {
+        return this.prisma.cursos.create({ data })
     }
 
-    async listarCursos() {
+    async list() {
         return this.prisma.cursos.findMany();
     }
 
-    async listarCurso(id: number) {
+    async read(id: number) {
 
         await this.exists(id);
 
         return this.prisma.cursos.findUnique({
-            where: {
-                id,
-            }
+            where: { id }
         });
 
     }
 
-    async atualizarCurso(id: number, { title, description }: UpdatePutCursoDTO) {
+    async update(id: number, data: CreateCursoDto) {
 
         await this.exists(id);
 
         return this.prisma.cursos.update({
-            data: { title, description },
-            where: { id },
+            data,
+            where: {
+                id
+            },
         });
 
     }
 
-    async atualizarParcial(id: number, { title, description }: UpdatePatchCursoDTO) {
+    async updatePartial(id: number, { title, description }: UpdatePatchCursoDTO) {
 
         await this.exists(id);
+
         const data: any = {};
 
         if (title) {
@@ -64,7 +62,7 @@ export class CursosService {
 
     }
 
-    async deletarCurso(id: number) {
+    async delete(id: number) {
 
         await this.exists(id);
 
@@ -78,11 +76,11 @@ export class CursosService {
 
     async exists(id: number) {
 
-        if (!(await this.prisma.cursos.count({
-            where: {
-                id
-            }
-        }))) {
+        const idCount = await this.prisma.cursos.count({
+            where: { id }
+        })
+
+        if (!idCount) {
             throw new NotFoundException(`O usuário com o ID ${id} não existe.`);
         }
     }

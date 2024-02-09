@@ -10,5 +10,4 @@ import { CursosModule } from './cursos/cursos.module';
   providers: [AppService],
 
 })
-
 export class AppModule {}

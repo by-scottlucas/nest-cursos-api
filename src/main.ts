@@ -9,9 +9,9 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe())
 
   const options = new DocumentBuilder()
-    .setTitle('Nest API Cursos')
+    .setTitle('Nest Cursos API')
     .setVersion('1.0.0')
-    .setDescription('O projeto se trata de uma API desenvolvida em NestJS para lidar com cursos.')
+    .setDescription('O projeto se trata de uma api  de cursos desenvolvida em NestJS.')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
